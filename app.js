@@ -296,7 +296,24 @@ app.post('/changeCurrStatus', async (request, response) => {
 });
 
 
-
+app.post('/getWinner',async(request,response)=>{
+    const productId = request.body.productId;
+    const product1 = await Products.findOne({productId:productId});
+    const winner = ['none',0,"xxx"];
+    const bidArray = product1['totalBid'];
+    for(let i =0;i<bidArray.length;i++){
+        if(bidArray[i][1]>winner[1]){
+            winner = bidArray[i];
+        }
+    }
+    response.status(201).send({
+        productId:productId,
+        productName:product1['productName'],
+        winnerName:winner[0],
+        winnerBid:winner[1],
+        winnerTransaction:winner[2]
+    })
+})
 
 
 
