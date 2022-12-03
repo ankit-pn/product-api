@@ -50,21 +50,21 @@ app.post("/addProduct", async (request, response) => {
         soldDetails: {}
     });
 
-    await addProductId(auctionId,productId);
-        product.save()
-            .then(async (result) => {
+    await addProductId(auctionId, productId);
+    product.save()
+        .then(async (result) => {
 
-                response.status(201).send({
-                    message: "Product Added Suceessfully",
-                    result,
-                });
-            }) // 
-            .catch((error) => {
-                response.status(500).send({
-                    message: "Error Saving Product",
-                    error,
-                });
-            })//
+            response.status(201).send({
+                message: "Product Added Suceessfully",
+                result,
+            });
+        }) // 
+        .catch((error) => {
+            response.status(500).send({
+                message: "Error Saving Product",
+                error,
+            });
+        })//
 })
 
 
@@ -88,7 +88,7 @@ app.post('/addAuction', async (request, response) => {
     // const basePrice = request.body.basePrice;
     const productArray = request.body.productArray;
     const productIdArray = [];
-    for(let i = 0 ;i<productArray.length;i++){
+    for (let i = 0; i < productArray.length; i++) {
         let productId = uuidv4();
         let productName = productArray[i]['productName'];
         let productDescription = productArray[i]['productDescription'];
@@ -117,7 +117,7 @@ app.post('/addAuction', async (request, response) => {
         approveStatus: approveStatus,
         Status: Status
     });
-  
+
 
     auction.save()
         // return success if the new user is added to the database successfully
@@ -137,7 +137,17 @@ app.post('/addAuction', async (request, response) => {
 })
 
 
-
+app.post('/getAuctionByUserId', async (request, response) => {
+    const userId = request.body.userId;
+    if (userId === undefined) {
+        response.json({ "userId": "userId not found" });
+    }
+    else {
+        const auctionDetails = await Auctions.find({ auctionHost: userId })
+        const resp = await auctionDetails.length ? { "auctionDetails": auctionDetails } : { "message": "No Records Found" }
+        await response.json(resp)
+    }
+})
 
 // register endpoint
 app.post('/getProducts', async (request, response) => {
@@ -204,7 +214,7 @@ app.post('/addBider', async (request, response) => {
     const auctionId = request.body.auctionId;
     const productId = request.body.productId;
     const bid = request.body.bid;
-    const bid1 = await Products.findOneAndUpdate({ productId: productId, auctionId: auctionId }, { $push: { "totalBid":  [userId,bid] } }).then((result) => {
+    const bid1 = await Products.findOneAndUpdate({ productId: productId, auctionId: auctionId }, { $push: { "totalBid": [userId, bid] } }).then((result) => {
         response.status(201).send({
             message: "bid added Suceessfully",
             result,
