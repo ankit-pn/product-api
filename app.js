@@ -87,6 +87,7 @@ app.post('/addAuction', async (request, response) => {
     // const productDescription = request.body.productDescription;
     // const basePrice = request.body.basePrice;
     const productArray = request.body.productArray;
+    const productIdArray = [];
     for(let i = 0 ;i<productArray.length;i++){
         let productId = uuidv4();
         let productName = productArray[i]['productName'];
@@ -101,7 +102,8 @@ app.post('/addAuction', async (request, response) => {
             totalBid: [],
             soldDetails: {}
         });
-        await addProductId(auctionId,productId);
+        productIdArray.push(productId);
+        // await addProductId(auctionId,productId);
         product.save()
     }
     const auction = new Auctions({
@@ -111,7 +113,7 @@ app.post('/addAuction', async (request, response) => {
         startDate: startDate,
         endDate: endDate,
         auctionHost: auctionHost,
-        productIds: [],
+        productIds: productIdArray,
         approveStatus: approveStatus,
         Status: Status
     });
