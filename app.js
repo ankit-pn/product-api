@@ -181,7 +181,7 @@ app.post('/addBider', async (request, response) => {
     const auctionId = request.body.auctionId;
     const productId = request.body.productId;
     const bid = request.body.bid;
-    const bid1 = await Products.findOneAndUpdate({ productId: productId, auctionId: auctionId }, { $push: { "totalBid": { userId: [userId,bid] } } }).then((result) => {
+    const bid1 = await Products.findOneAndUpdate({ productId: productId, auctionId: auctionId }, { $push: { "totalBid":  [userId,bid] } }).then((result) => {
         response.status(201).send({
             message: "bid added Suceessfully",
             result,
