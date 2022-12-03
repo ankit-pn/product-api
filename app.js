@@ -50,7 +50,7 @@ app.post("/addProduct", async (request, response) => {
         soldDetails: {}
     });
 
-
+    await addProductId(auctionId,productId);
         product.save()
             .then(async (result) => {
 
@@ -69,23 +69,9 @@ app.post("/addProduct", async (request, response) => {
 
 
 
-app.post('/addProductId', async (req, res) => {
-    const auctionId = req.body.auctionId;
-    const productId = req.body.productId;
-    const user = await Auctions.findOneAndUpdate({ auctionId: auctionId }, { $push: { "productIds": productId } }).then((result) => {
-        res.status(201).send({
-            message: "ProductIds added Suceessfully",
-            result,
-        });
-    })
-        // catch error if the new user wasn't added successfully to the database
-        .catch((error) => {
-            res.status(500).send({
-                message: "Error Adding ProductIds",
-                error,
-            });
-        });
-})
+const addProductId = async (auctionId, productId) => {
+    const user = await Auctions.findOneAndUpdate({ auctionId: auctionId }, { $push: { "productIds": productId } });
+}
 
 app.post('/addAuction', async (request, response) => {
     const auctionId = request.body.auctionId;
@@ -102,6 +88,7 @@ app.post('/addAuction', async (request, response) => {
         auctionDescription: auctionDescription,
         startDate: startDate,
         endDate: endDate,
+        auctionHost: auctionHost,
         productIds: [],
         approveStatus: approveStatus,
         Status: Status
