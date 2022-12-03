@@ -17,6 +17,10 @@ const auctionSchema = new mongoose.Schema({
         type:Array,
         require:[true,"Please provide Data"],
     },
+    auctionHost:{
+        type:String,
+        require:[true,"Provide auctionHost"]
+    }  ,
     startDate:{
         type:String,
         require:[true,'Please provide startDate']

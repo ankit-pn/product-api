@@ -93,6 +93,7 @@ app.post('/addAuction', async (request, response) => {
     const auctionDescription = request.body.auctionDescription;
     const startDate = request.body.startDate;
     const endDate = request.body.endDate;
+    const auctionHost = request.body.auctionHost;
     const approveStatus = request.body.approveStatus;
     const Status = request.body.Status;
     const auction = new Auctions({
@@ -152,6 +153,18 @@ app.post('/getAuctionDetailByAuctionId', async (request, response) => {
     else {
         const auctionDetails = await Auctions.find({ auctionId: auctionId })
         const resp = await auctionDetails.length ? { "auctionDetails": auctionDetails } : { "message": "No Records Found" }
+        await response.json(resp)
+    }
+})
+
+app.post('/getProductDetailByProductId', async (request, response) => {
+    const productId = request.body.productId;
+    if (productId === undefined) {
+        response.json({ "productId": "productId not found" });
+    }
+    else {
+        const productDetails = await Products.find({ productId: productId })
+        const resp = await productDetails.length ? { "productDetails": productDetails } : { "message": "No Records Found" }
         await response.json(resp)
     }
 })
