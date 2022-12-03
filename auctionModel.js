@@ -35,7 +35,11 @@ const auctionSchema = new mongoose.Schema({
     },
     Status:{
         type:"String",
-        required:[true,'Please provide curr status']
+        require:[true,'Please provide curr status']
+    },
+    isProcessed:{
+        type:Boolean,
+        require:[true,"Please provide value"]
     }
 
 })

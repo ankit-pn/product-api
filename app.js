@@ -115,7 +115,8 @@ app.post('/addAuction', async (request, response) => {
         auctionHost: auctionHost,
         productIds: productIdArray,
         approveStatus: approveStatus,
-        Status: Status
+        Status: Status,
+        isProcessed:false
     });
 
 
@@ -253,6 +254,20 @@ app.post('/changeApproveStatus', async (request, response) => {
                 });
             })
     }
+});
+
+app.post('/changeProcessedStatus', async (request, response) => {
+    const auctionId = request.body.auctionId;
+        const bid1 = await Auctions.findOneAndUpdate({ auctionId: auctionId }, {
+            $set: {
+                "isProcessed": newStatus
+            }
+        }).then((result) => {
+            response.status(201).send({
+                message: "updated Suceessfully",
+                result,
+            });
+        })
 });
 
 app.post('/changeCurrStatus', async (request, response) => {
