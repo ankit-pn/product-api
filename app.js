@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const dbConnect = require("./dbConnect");
 const Products = require("./productModel");
 const Auctions = require("./auctionModel");
-
+const { v4: uuidv4 } = require('uuid');
 dbConnect();
 
 // Curb Cores Error by adding a header here
@@ -35,7 +35,7 @@ app.get("/", (request, response, next) => {
 
 app.post("/addProduct", async (request, response) => {
 
-    const productId = request.body.productId;
+    const productId = uuidv4();
     const auctionId = request.body.auctionId;
     const productName = request.body.productName;
     const productDescription = request.body.productDescription;
@@ -74,14 +74,36 @@ const addProductId = async (auctionId, productId) => {
 }
 
 app.post('/addAuction', async (request, response) => {
-    const auctionId = request.body.auctionId;
+    const auctionId = uuidv4();
     const auctionName = request.body.auctionName;
     const auctionDescription = request.body.auctionDescription;
     const startDate = request.body.startDate;
     const endDate = request.body.endDate;
     const auctionHost = request.body.auctionHost;
-    const approveStatus = request.body.approveStatus;
+    const approveStatus = false;
     const Status = request.body.Status;
+    // const productId = uuidv4();
+    // const productName = request.body.productName;
+    // const productDescription = request.body.productDescription;
+    // const basePrice = request.body.basePrice;
+    const productArray = request.body.productArray;
+    for(let i = 0 ;i<productArray.length;i++){
+        let productId = uuidv4();
+        let productName = productArray[i]['productName'];
+        let productDescription = productArray[i]['productDescription'];
+        let basePrice = productArray[i]['basePrice'];
+        const product = new Products({
+            productId: productId,
+            auctionId: auctionId,
+            productName: productName,
+            productDescription: productDescription,
+            basePrice: basePrice,
+            totalBid: [],
+            soldDetails: {}
+        });
+        await addProductId(auctionId,productId);
+        product.save()
+    }
     const auction = new Auctions({
         auctionId: auctionId,
         auctionName: auctionName,
@@ -93,6 +115,7 @@ app.post('/addAuction', async (request, response) => {
         approveStatus: approveStatus,
         Status: Status
     });
+  
 
     auction.save()
         // return success if the new user is added to the database successfully
@@ -109,8 +132,6 @@ app.post('/addAuction', async (request, response) => {
                 error,
             });
         });
-
-
 })
 
 
