@@ -260,7 +260,7 @@ app.post('/changeProcessedStatus', async (request, response) => {
     const auctionId = request.body.auctionId;
         const bid1 = await Auctions.findOneAndUpdate({ auctionId: auctionId }, {
             $set: {
-                "isProcessed": newStatus
+                "isProcessed": true
             }
         }).then((result) => {
             response.status(201).send({
